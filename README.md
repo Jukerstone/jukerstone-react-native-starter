@@ -1,79 +1,208 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Jukerstone React Native SDK
 
-# Getting Started
+The **Jukerstone React Native SDK** enables access to licensed music videos using ISRC, with real-time playback, token burns, and stream reporting — powered by the Jukerstone protocol.
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+Built for mobile developers building cross-platform music experiences with token-based economics and playback transparency.
 
-## Step 1: Start the Metro Server
+---
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+## 🎯 What This SDK Does
 
-To start Metro, run the following command from the _root_ of your React Native project:
+- ✅ Plays official music videos using just the ISRC
+  
+- 🔐 Authenticates with your Developer Token (JDT) and Jukerstone ID (JID)
+  
+- 🔄 Burns a Spin for every playback — reducing token supply
+  
+- 🎛 Supports playback, seeking, events, and progress tracking
+  
+- 📡 Automatically syncs MediaSession (iOS only)
+  
+- 📊 Reports stream data to the Jukerstone Dashboard  
 
-```bash
-# using npm
-npm start
+> Currently supported on iOS only. Android support coming soon.
 
-# OR using Yarn
-yarn start
-```
+---
 
-## Step 2: Start your Application
+## 📦 Installation
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
-
-### For Android
-
-```bash
-# using npm
-npm run android
-
-# OR using Yarn
-yarn android
-```
-
-### For iOS
+Install the SDK and its dependencies:
 
 ```bash
-# using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
+npm install jukepod-react-native
+# or
+yarn add jukepod-react-native
 ```
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+Then install iOS native dependencies:
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+bash
+Copy
+Edit
+```bash
+cd ios && pod install && cd ..
+```
+This package uses react-native-webview and requires CocoaPods.
 
-## Step 3: Modifying your App
+## 🛠 Requirements
+- React Native >= 0.64
+- iOS deployment target >= 13.0
+- Node >= 16
+- Xcode and CocoaPods for iOS builds
 
-Now that you have successfully run the app, let's modify it.
+You will also need:
 
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
+- A Jukerstone ID (JID)
+- A Jukerstone Developer Token (JDT)
 
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
+👉 Get both at jukerstone.com/dashboard
 
-## Congratulations! :tada:
+## 🚀 Quickstart
+tsx
+Copy
+Edit
 
-You've successfully run and modified your React Native App. :partying_face:
+```bash
+import React from "react";
+import {
+  JukerstoneSDK,
+  handleSpin,
+  handlePause,
+  handleStop,
+  handleResume,
+  handleSeek,
+  onProgress,
+  onPrevious,
+  onNext,
+  onEnd,
+} from "jukepod-react-native";
 
-### Now what?
+const App = () => {
+  return (
+    <JukerstoneSDK>
+      {/* Your app content */}
+    </JukerstoneSDK>
+  );
+};
+```
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
+## 🎮 Playback Controls
+ts
+Copy
+Edit
+```bash
+handleSpin();      // Play now (burns a Spin)
+handlePause();     // Pause playback
+handleResume();    // Resume playback
+handleStop();      // Stop playback
+handleSeek(0.5);   // Seek to 50%
+```
 
-# Troubleshooting
+## 📡 Progress & Events
+ts
+Copy
+Edit
+```bash
+const progress = onProgress();
+// progress: { currentTime, duration, percentage }
 
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+onEnd();      // Callback for end of playback
+onNext();     // Callback for next track
+onPrevious(); // Callback for previous track
+```
 
-# Learn More
+## 🔉 MediaSession Support (iOS)
+On iOS, playback integrates with native controls:
 
-To learn more about React Native, take a look at the following resources:
+- 🎵 Displays title, artist, and album artwork
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+- 🎧 Supports AirPods, Bluetooth, CarPlay
+
+- 🎛 Enables native control center playback
+
+## 🔥 Why Spins?
+Spins are the protocol-level unit of access.
+Every time a video is played:
+
+- 🔥 A Spin is burned
+
+- 📉 Supply decreases
+
+- 📈 Value increases
+
+Apps contribute to the protocol by consuming tokens.
+
+You can:
+
+- 💼 Hold Spins for your users or app
+
+- 🏦 Pre-fund access via the dashboard
+
+- 📊 Monitor usage and burn in real time
+
+- 📊 Dashboard & Analytics
+Log into your Jukerstone Dashboard to:
+
+- 🔥 View playback burn logs
+
+- 🎥 Inspect per-track performance
+
+- 🧠 Analyze session trends and ISRCs
+
+- 🏆 Track global usage leaderboards
+
+- 🧾 Notes
+Only iOS is supported at this time
+
+Android is in progress and coming soon
+
+> No media hosting required — Jukerstone handles rights, metadata, and delivery
+
+- 🪙 Buy Tokens
+Spins are available via:
+
+- 🔄 Direct allocation
+
+- 🤝 Partnership packages
+
+- 🧑‍💻 Developer purchase program
+
+>Early builders receive discounts.
+> Treasury-backed with transparent burn economics.
+
+> 👉 Get started at jukerstone.com
+
+---
+
+## 🧩 SDK Compatibility
+
+- ✅ Native Swift (UIKit)  
+- ✅ SwiftUI-ready  
+- ✅ React Native (via bridge – available on request)  
+
+---
+
+## 🧠 Build with Confidence
+
+This SDK powers video playback in production across:
+
+- 🛍 Retail environments  
+- 🏋️‍♀️ Gyms and fitness studios  
+- 🎧 Music-facing mobile apps  
+- 🖥 Interactive displays and embedded devices  
+
+> 📦 Weekly updates  
+> 🎵 Real content  
+> 🚚 Shipping software  
+
+---
+
+## 📣 Need Help?
+
+- Visit your dashboard: [jukerstone.com/dashboard](https://jukerstone.com/dashboard)  
+- Reach out via the developer portal or Discord  
+- Questions? We're here to support you  
+
+---
+
+© Jukerstone Ltd. All rights reserved.

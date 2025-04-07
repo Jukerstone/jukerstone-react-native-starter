@@ -1,12 +1,5 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import React from 'react';
-import type {PropsWithChildren} from 'react';
+import {Jukerstone, useJukerstone} from 'jukerstone-react-native';
 import {
   SafeAreaView,
   ScrollView,
@@ -15,6 +8,7 @@ import {
   Text,
   useColorScheme,
   View,
+  Button,
 } from 'react-native';
 
 import {
@@ -25,29 +19,21 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
+function Section({children, title}: any): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
   return (
     <View style={styles.sectionContainer}>
       <Text
         style={[
           styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
+          {color: isDarkMode ? Colors.white : Colors.black},
         ]}>
         {title}
       </Text>
       <Text
         style={[
           styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
+          {color: isDarkMode ? Colors.light : Colors.dark},
         ]}>
         {children}
       </Text>
@@ -55,10 +41,27 @@ function Section({children, title}: SectionProps): React.JSX.Element {
   );
 }
 
+// 🎛️ Simple functional controls using the SDK
+const JukerstoneControls = () => {
+  const {load, pause} = useJukerstone();
+
+  return (
+    <View style={{padding: 16}}>
+      <Button
+        title="Load Penny Lane by the beatles"
+        onPress={() => load({isrc: 'GBAYE0601641'})}
+      />
+      <Button title="▶️ Play" onPress={pause} />
+      <Button title="⏸ Pause" onPress={pause} />
+    </View>
+  );
+};
+
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
+    flex: 1,
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
@@ -68,30 +71,18 @@ function App(): React.JSX.Element {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
+
+      <Jukerstone.Provider
+        developerToken="sk_ud7C9uUlpeyjedomEsmRDIPB4757922WDyVE"
+        jukerstoneId="TvauQsMtXJSeZyLhRHj3RV8FjjH2">
+        <ScrollView
+          contentInsetAdjustmentBehavior="automatic"
+          style={backgroundStyle}>
+          <Header />
+          <Section title="Welcome to JukePod™">Stream. Play. Repeat.</Section>
+          <JukerstoneControls />
+        </ScrollView>
+      </Jukerstone.Provider>
     </SafeAreaView>
   );
 }
